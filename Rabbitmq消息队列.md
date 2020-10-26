@@ -51,6 +51,35 @@
    ```java
    //在Application中开启rabbit注解 @EnableRabbit
    //在Service中添加@RabbitListener(queues = "atguigu.news")
+   //不止可以监听特定对象
+@RabbitListener(queues = "atguigu.news")
+   public void receive2(Message message){
+       System.out.println("消息体:"+Arrays.toString(message.getBody()));
+       System.out.println("消息头:"+message.getMessageProperties());
+   }
+   ```
+   
+4. 代码操作交换器和消息队列
+
+   ```java
+   @Test
+   public void exchageDeclear(/**/)throws IOException, InterruptedException{
+       amqpAdmin.declareExchange(new DirectExchange("amqpAdmin.exchange"));
+       System.out.println("一个directExchange创建完成");
+       amqpAdmin.declareQueue(new Queue("amqpAdmin.queue",true));//创建一个队列，是否持久化
+       System.out.println("一个队列创建完毕");
+       amqpAdmin.declareBinding(new Binding("amqpAdmin.queue",Binding.DestinationType.QUEUE,
+                                            "amqpAdmin.exchange","amqp.xxx",null));
+       System.out.println("添加一个绑定:queue到exchange ");
+   }
+   ```
+
+5. Elasticsearch海量数据检索引擎
+
+   ```java
+   //基于docker
+   //启动后默认占用内存:2G，重新设置最大占用内存
+   docker run -e ES_JAVA_OPTS="-Xms256m -Xmx256m" -d -p 9200:9200 -p 9300:9300 --name elastic01 0f1dsf1ds
    ```
 
    
